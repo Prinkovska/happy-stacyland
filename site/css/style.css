@@ -340,9 +340,12 @@ a, button {
 .hero {
   /* Ширина рамки відео на десктопі; від неї залежать і плашки переваг */
   --media-w: min(82vw, calc(100svh * 16 / 9));
+  /* Наскільки кадр піднятий над низом екрана: щоб хвиля не підрізала груди собак
+     і зверху не лишалось порожньої смуги. Не більше, ніж є вільного місця зверху. */
+  --media-lift: min(calc(clamp(40px, 6vw, 90px) * 0.65), calc(100svh - var(--media-w) * 9 / 16));
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-end;  /* текст притиснутий донизу — кнопки на рівні плашок */
   min-height: 100vh;
   min-height: 100svh;
   overflow: hidden;
@@ -370,7 +373,7 @@ a, button {
 .hero__canvas {
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: var(--media-lift);
   z-index: -3;
   /* Ширина підібрана так, щоб собаки починались одразу після тексту на будь-якому екрані */
   width: var(--media-w);
@@ -378,9 +381,14 @@ a, button {
   height: auto;
   object-fit: cover;
   object-position: 50% 50%;
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 22%), linear-gradient(to bottom, transparent 0, #000 9%);
+  /* Краї кадру м'яко розчиняються у фоні: ліворуч, зверху і знизу */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 22%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 90%, transparent 100%);
   -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(to right, transparent 0, #000 22%), linear-gradient(to bottom, transparent 0, #000 9%);
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 22%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 90%, transparent 100%);
   mask-composite: intersect;
 }
 .hero__canvas { opacity: 0; transition: opacity 0.6s; }
@@ -405,8 +413,9 @@ a, button {
   transition: transform 0.6s var(--ease-out);
 }
 .doodle__svg { width: 100%; height: 100%; animation: doodle-float 5s ease-in-out infinite; animation-delay: var(--delay, 0s); }
-.doodle--paw { --size: 70px; bottom: 12%; left: 36%; }
-.doodle--heart { --size: 58px; bottom: 20%; left: 41%; --delay: 1.3s; }
+/* Лапка й сердечко — у порожньому місці над заголовком */
+.doodle--paw { --size: 70px; top: 17%; left: 16%; }
+.doodle--heart { --size: 58px; top: 24%; left: 35%; --delay: 1.3s; }
 .doodle--crown { --size: 70px; top: 13%; right: 9%; --delay: 0.6s; }
 .doodle--dots { --size: 40px; top: 30%; left: 1.2%; --delay: 2s; }
 /* Хвиля поки прихована: її місце на грудях собак зайняли плашки переваг */
@@ -416,9 +425,22 @@ a, button {
   width: 100%;
   max-width: var(--container-wide);
   margin: 0 auto;
-  padding: calc(var(--header-h) + 3.5rem) var(--gutter) 6rem;  /* зверху — місце під шапку і бейдж */
+  /* зверху — місце під шапку і бейдж;
+     знизу — так, щоб кнопки стояли на одному рівні з плашками на грудях собак
+     (плашки ≈ на 19% висоти кадру від низу; 28px — половина висоти кнопки) */
+  padding: calc(var(--header-h) + 3.5rem) var(--gutter) calc(var(--media-w) * 9 / 16 * 0.19 - 28px + var(--media-lift));
 }
-.hero__content { max-width: 560px; }
+/* Порядок: заголовок → підзаголовок → картка заводчика → кнопки (→ переваги на мобільному) */
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 560px;
+}
+.hero__title, .hero__lead { align-self: stretch; }
+.hero__content .breeder-card { order: 1; margin-bottom: var(--space-l); }
+.hero__actions { order: 2; }
+.hero__facts { order: 3; }
 
 /* Бейдж — одразу під логотипами в шапці, вирівняний з ними по лівому краю */
 .hero__top {
@@ -454,9 +476,9 @@ a, button {
   animation: draw-line 1s 1.1s var(--ease-out) both;
 }
 .hero__lead {
-  max-width: 500px;
+  max-width: 31em;  /* ширина залежить від шрифту: перший рядок «…з перших днів.» вміщується цілим */
   margin-bottom: var(--space-l);
-  font-size: clamp(0.98rem, 0.92rem + 0.25vw, 1.125rem);
+  font-size: clamp(0.95rem, 0.6rem + 0.5vw, 1.125rem);
   font-weight: 600;
   line-height: 1.42;
   color: var(--c-cream);
@@ -467,14 +489,14 @@ a, button {
   color: var(--c-yellow);
   font-weight: 800;
 }
-.hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-m); margin-bottom: var(--space-l); }
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-m); }
 
 /* Переваги — «медальки» на грудях собак (десктоп).
    Список накладається точно на рамку відео (--media-w), позиції — частки кадру. */
 .hero__facts {
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: var(--media-lift);
   z-index: 1;
   width: var(--media-w);
   aspect-ratio: 16 / 9;
@@ -502,6 +524,8 @@ a, button {
 .hero__fact--1 { --x: 46%;   --y: 80%; --tilt: -4deg; --delay: 1.5s; }
 .hero__fact--2 { --x: 66.5%; --y: 82%; --tilt: 3deg;  --delay: 1.65s; }
 .hero__fact--3 { --x: 87%;   --y: 80%; --tilt: -3deg; --delay: 1.8s; }
+/* Довша плашка — у 2 рядки, щоб не виходила за край кадру */
+.hero__fact--3 { line-height: 1.12; border-radius: 22px; }
 .hero__fact-icon {
   display: grid;
   place-items: center;
@@ -531,6 +555,7 @@ a, button {
   object-fit: cover;
 }
 .breeder-card__name { font-family: var(--font-hand); font-size: 1.5rem; font-weight: 700; line-height: 1; color: var(--c-yellow); }
+.breeder-card__maiden { white-space: nowrap; }  /* старе прізвище — поруч, багато хто знає за ним */
 .breeder-card__role { font-size: 0.8125rem; font-weight: 600; color: var(--c-light); }
 
 /* Підказка «поводіть кісточкою» */
@@ -618,10 +643,10 @@ a, button {
 
 /* Невисокі екрани ноутбуків (напр. 1280×720, 1366×768): ущільнюємо по вертикалі, щоб усе вміщалось */
 @media (min-width: 1025px) and (max-height: 800px) {
-  .hero__inner { padding-top: calc(var(--header-h) + 3rem); padding-bottom: 4rem; }
+  .hero__inner { padding-top: calc(var(--header-h) + 3rem); }
   .hero__title { margin-bottom: var(--space-s); }
   .hero__lead { margin-bottom: var(--space-m); }
-  .hero__actions { margin-bottom: var(--space-m); }
+  .hero__content .breeder-card { margin-bottom: var(--space-m); }
 }
 
 /* Крапки-дудл — лише на великих моніторах, де зліва є місце */
@@ -662,6 +687,9 @@ a, button {
     padding-top: calc(min(94vw, 62svh) - 3.5rem);
     padding-bottom: clamp(4rem, 12vw, 6rem);
   }
+  .hero__actions { margin-bottom: var(--space-m); }
+  /* На телефоні кнопки важливіше бачити одразу — картка заводчика йде в кінець */
+  .hero__content .breeder-card { order: 4; margin-bottom: 0; }
   /* На вузьких екранах заголовок переноситься природно */
   .hero__title-line { display: inline; white-space: normal; }
   .hero__title { text-wrap: balance; }
