@@ -1,0 +1,16 @@
+# Білий список: у репозиторій потрапляє лише сайт, документація та інструменти перегляду.
+# Сирі фото, відео, docx/pdf/xlsx лишаються тільки на диску.
+/*
+!/site/
+!/docs/
+!/CLAUDE.md
+!/.gitignore
+!/.claude/
+/.claude/*
+!/.claude/serve.ps1
+!/.claude/launch.json
+
+# Системне сміття
+Thumbs.db
+desktop.ini
+.DS_Store

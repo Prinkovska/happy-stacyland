@@ -1,0 +1,608 @@
+/* =========================================================
+   Happy Stacyland — основні стилі
+   Структура:
+   1. Токени (кольори, шрифти, відступи)
+   2. База
+   3. Курсори (лапка / кісточка)
+   4. Кнопки та бейджі
+   5. Шапка (header)
+   6. Hero
+   7. Анімації
+   8. Адаптив
+   ========================================================= */
+
+/* ---------- 1. Токени ---------- */
+:root {
+  /* Кольори бренду */
+  --c-yellow: #FFC700;
+  --c-navy: #0B2D61;
+  --c-green: #6CAB3C;
+  --c-light: #F2F4F8;
+  --c-cream: #F7F3E8;
+  --c-white: #FFFFFF;
+  --c-navy-deep: #061B3D;            /* темніший синій для оверлеїв */
+
+  /* Шрифти (щоб змінити — правимо лише тут і посилання в <head>) */
+  --font-heading: "M PLUS Rounded 1c", "Nunito", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+  --font-hand: "Caveat", cursive;
+
+  /* Розміри тексту (плавно масштабуються від мобільного до десктопу) */
+  --fs-h1: clamp(2.25rem, 1.25rem + 2.5vw, 3.8rem);
+  --fs-h2: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+  --fs-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+
+  /* Відступи */
+  --space-xs: 0.5rem;
+  --space-s: 0.75rem;
+  --space-m: 1.25rem;
+  --space-l: 2rem;
+  --space-xl: 3.5rem;
+  --gutter: clamp(1rem, 4vw, 4rem);  /* бічні поля сторінки */
+  --container: 1280px;               /* звичайна ширина контенту блоків */
+  --container-wide: 1600px;          /* шапка і Hero — ширше, щоб на великих моніторах не було порожнечі */
+
+  /* Форми */
+  --radius-s: 12px;
+  --radius-m: 20px;
+  --radius-l: 32px;
+  --radius-pill: 999px;
+
+  /* Тіні та рух */
+  --shadow-soft: 0 10px 30px rgba(11, 45, 97, 0.12);
+  --shadow-green: 0 10px 26px rgba(108, 171, 60, 0.45);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --header-h: 84px;
+}
+
+/* ---------- 2. База ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--c-navy);
+  background: var(--c-cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg, canvas, video { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+p { margin: 0; }
+
+ul { margin: 0; padding: 0; list-style: none; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 3px solid var(--c-yellow);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ---------- 3. Курсори ---------- */
+/* Лапка — по всьому сайту; на посиланнях жовта */
+body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%230B2D61' stroke='%23fff' stroke-width='1.2'%3E%3Cellipse cx='16' cy='22' rx='7.5' ry='5.8'/%3E%3Cellipse cx='6.5' cy='15.5' rx='3.2' ry='4.2'/%3E%3Cellipse cx='12.3' cy='10.5' rx='3.2' ry='4.2'/%3E%3Cellipse cx='19.7' cy='10.5' rx='3.2' ry='4.2'/%3E%3Cellipse cx='25.5' cy='15.5' rx='3.2' ry='4.2'/%3E%3C/g%3E%3C/svg%3E") 16 16, auto;
+}
+a, button {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%23FFC700' stroke='%230B2D61' stroke-width='1.2'%3E%3Cellipse cx='16' cy='22' rx='7.5' ry='5.8'/%3E%3Cellipse cx='6.5' cy='15.5' rx='3.2' ry='4.2'/%3E%3Cellipse cx='12.3' cy='10.5' rx='3.2' ry='4.2'/%3E%3Cellipse cx='19.7' cy='10.5' rx='3.2' ry='4.2'/%3E%3Cellipse cx='25.5' cy='15.5' rx='3.2' ry='4.2'/%3E%3C/g%3E%3C/svg%3E") 16 16, pointer;
+}
+/* Кісточка — у Hero (собаки стежать за нею) */
+.hero {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cg transform='rotate(-35 18 18)'%3E%3Cg fill='%230B2D61'%3E%3Crect x='8' y='14' width='20' height='8' rx='3'/%3E%3Ccircle cx='8.5' cy='13.5' r='5'/%3E%3Ccircle cx='8.5' cy='22.5' r='5'/%3E%3Ccircle cx='27.5' cy='13.5' r='5'/%3E%3Ccircle cx='27.5' cy='22.5' r='5'/%3E%3C/g%3E%3Cg fill='%23FFC700'%3E%3Crect x='8' y='15.6' width='20' height='4.8' rx='2'/%3E%3Ccircle cx='8.5' cy='13.5' r='3.5'/%3E%3Ccircle cx='8.5' cy='22.5' r='3.5'/%3E%3Ccircle cx='27.5' cy='13.5' r='3.5'/%3E%3Ccircle cx='27.5' cy='22.5' r='3.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") 18 18, auto;
+}
+.hero a,
+.hero button {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cg transform='rotate(-35 18 18)'%3E%3Cg fill='%230B2D61'%3E%3Crect x='8' y='14' width='20' height='8' rx='3'/%3E%3Ccircle cx='8.5' cy='13.5' r='5'/%3E%3Ccircle cx='8.5' cy='22.5' r='5'/%3E%3Ccircle cx='27.5' cy='13.5' r='5'/%3E%3Ccircle cx='27.5' cy='22.5' r='5'/%3E%3C/g%3E%3Cg fill='%236CAB3C'%3E%3Crect x='8' y='15.6' width='20' height='4.8' rx='2'/%3E%3Ccircle cx='8.5' cy='13.5' r='3.5'/%3E%3Ccircle cx='8.5' cy='22.5' r='3.5'/%3E%3Ccircle cx='27.5' cy='13.5' r='3.5'/%3E%3Ccircle cx='27.5' cy='22.5' r='3.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") 18 18, pointer;
+}
+
+/* ---------- 4. Кнопки та бейджі ---------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 56px;
+  padding: 0 1.9rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 800;
+  line-height: 1;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out),
+              background-color 0.25s, color 0.25s, border-color 0.25s;
+}
+.btn:hover { transform: translateY(-3px) scale(1.03); }
+.btn:active { transform: translateY(0) scale(0.98); }
+
+/* Основна (зелена) кнопка з «відблиском» */
+.btn--primary {
+  background: var(--c-green);
+  color: var(--c-navy);
+  box-shadow: var(--shadow-green);
+}
+.btn--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 -80%;
+  z-index: -1;
+  width: 55%;
+  background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.55) 50%, transparent 80%);
+  transform: skewX(-20deg);
+  animation: btn-shine 3.2s ease-in-out infinite;
+}
+.btn--primary:hover { box-shadow: 0 16px 34px rgba(108, 171, 60, 0.6); }
+
+/* Контурна кнопка для темного фону */
+.btn--ghost-light {
+  border-color: rgba(255, 255, 255, 0.85);
+  color: var(--c-white);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(4px);
+}
+.btn--ghost-light:hover { background: var(--c-white); color: var(--c-navy); }
+
+/* Мала синя кнопка (шапка) */
+.btn--small { min-height: 44px; padding: 0 1.25rem; font-size: 0.9375rem; }
+.btn--navy { background: var(--c-navy); color: var(--c-white); }
+.btn--navy:hover { background: var(--c-yellow); color: var(--c-navy); }
+.btn--yellow { background: var(--c-yellow); color: var(--c-navy); }
+.btn--yellow:hover { background: var(--c-white); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-pill);
+  background: var(--c-yellow);
+  color: var(--c-navy);
+  font-size: var(--fs-small);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- 5. Шапка ---------- */
+.header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  height: var(--header-h);
+  color: var(--c-white);
+  transition: background-color 0.35s, box-shadow 0.35s, color 0.35s, height 0.35s var(--ease-out);
+}
+.header--scrolled {
+  --header-h: 68px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 24px rgba(11, 45, 97, 0.08);
+  color: var(--c-navy);
+}
+.header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-l);
+  height: 100%;
+  max-width: var(--container-wide);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Логотип-напис (спрощена версія логотипу з серцем для малих розмірів) */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+.logo__mark { width: 46px; height: 42px; color: currentColor; }
+.logo__mark-heart { stroke: currentColor; }
+.logo__mark-paw { fill: var(--c-yellow); }
+.logo__text { display: flex; flex-direction: column; line-height: 0.9; }
+.logo__happy { font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; }
+.logo__stacyland { font-family: var(--font-hand); font-weight: 700; font-size: 1.55rem; color: var(--c-green); }
+
+.nav { margin-left: auto; }
+.nav__list { display: flex; gap: clamp(1rem, 1.8vw, 2rem); }
+.nav__link {
+  position: relative;
+  font-weight: 700;
+  font-size: 0.98rem;
+  padding: 0.35rem 0;
+}
+/* Хвиляста підкреслювальна лінія при наведенні */
+.nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -4px;
+  height: 6px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0 12 3 T24 3' fill='none' stroke='%23FFC700' stroke-width='2'/%3E%3C/svg%3E") repeat-x 0 0 / 24px 6px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-out);
+}
+.nav__link:hover::after,
+.nav__link[aria-current="page"]::after { transform: scaleX(1); }
+
+.header__actions { display: flex; align-items: center; gap: var(--space-s); }
+.header__icon {
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  transition: background-color 0.25s, transform 0.3s var(--ease-out);
+}
+.header__icon:hover { background: rgba(255, 199, 0, 0.25); transform: rotate(-8deg); }
+.header__icon svg { width: 22px; height: 22px; }
+
+/* Бургер (видно лише на планшеті/мобільному) */
+.burger {
+  display: none;
+  width: 48px; height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--c-yellow);
+  color: var(--c-navy);
+}
+.burger__line {
+  display: block;
+  width: 20px; height: 2.5px;
+  margin: 4px auto;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.3s var(--ease-out), opacity 0.2s;
+}
+.burger[aria-expanded="true"] .burger__line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.burger[aria-expanded="true"] .burger__line:nth-child(2) { opacity: 0; }
+.burger[aria-expanded="true"] .burger__line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Мобільне меню */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-l);
+  padding: calc(var(--header-h) + 1rem) var(--gutter) 2rem;
+  background: var(--c-navy);
+  color: var(--c-white);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s, visibility 0.35s;
+}
+.mobile-menu--open { opacity: 1; visibility: visible; }
+.mobile-menu__list { display: grid; gap: 0.4rem; }
+.mobile-menu__link {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 7vw, 2.5rem);
+  display: inline-block;
+  transform: translateY(16px);
+  opacity: 0;
+  transition: transform 0.5s var(--ease-out), opacity 0.5s, color 0.2s;
+}
+.mobile-menu--open .mobile-menu__link { transform: none; opacity: 1; }
+.mobile-menu__link:hover { color: var(--c-yellow); }
+.mobile-menu__item:nth-child(2) .mobile-menu__link { transition-delay: 0.04s; }
+.mobile-menu__item:nth-child(3) .mobile-menu__link { transition-delay: 0.08s; }
+.mobile-menu__item:nth-child(4) .mobile-menu__link { transition-delay: 0.12s; }
+.mobile-menu__item:nth-child(5) .mobile-menu__link { transition-delay: 0.16s; }
+.mobile-menu__item:nth-child(6) .mobile-menu__link { transition-delay: 0.2s; }
+.mobile-menu__footer { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-m); }
+
+/* ---------- 6. Hero ---------- */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--c-navy-deep);
+  color: var(--c-white);
+  isolation: isolate;
+}
+
+/* Фон: розмитий кадр — «продовжує» ліс ліворуч і зверху від собак */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -4;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 20% 50%;
+  filter: blur(26px) brightness(0.7) saturate(1.1);
+  transform: scale(1.15);
+}
+
+/* Відео-кадри: <img> — перший кадр (миттєвий показ і SEO), <canvas> — анімація погляду.
+   Десктоп: кадр праворуч унизу, краї м'яко розчиняються у фоні */
+.hero__poster,
+.hero__canvas {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -3;
+  /* Ширина підібрана так, щоб собаки починались одразу після тексту на будь-якому екрані */
+  width: min(82vw, calc(100svh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: cover;
+  object-position: 50% 50%;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 22%), linear-gradient(to bottom, transparent 0, #000 9%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent 0, #000 22%), linear-gradient(to bottom, transparent 0, #000 9%);
+  mask-composite: intersect;
+}
+.hero__canvas { opacity: 0; transition: opacity 0.6s; }
+.hero__canvas--ready { opacity: 1; }
+
+/* Затемнення зліва під текст + легке знизу */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(90deg, rgba(6, 27, 61, 0.88) 0%, rgba(6, 27, 61, 0.62) 32%, rgba(6, 27, 61, 0) 58%),
+    linear-gradient(0deg, rgba(6, 27, 61, 0.55) 0%, rgba(6, 27, 61, 0) 30%);
+}
+
+/* Дудли (лапки, серце, корона, хвиля) */
+.hero__doodles { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.doodle {
+  position: absolute;
+  width: var(--size, 64px);
+  height: var(--size, 64px);
+  transition: transform 0.6s var(--ease-out);
+}
+.doodle__svg { width: 100%; height: 100%; animation: doodle-float 5s ease-in-out infinite; animation-delay: var(--delay, 0s); }
+.doodle--paw { --size: 70px; bottom: 12%; left: 36%; }
+.doodle--heart { --size: 58px; bottom: 20%; left: 41%; --delay: 1.3s; }
+.doodle--crown { --size: 70px; top: 13%; right: 9%; --delay: 0.6s; }
+.doodle--dots { --size: 40px; top: 30%; left: 1.2%; --delay: 2s; }
+.doodle--wave { --size: 120px; bottom: 11%; right: 6%; height: 40px; --delay: 1.8s; }
+
+.hero__inner {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin: 0 auto;
+  padding: calc(var(--header-h) + 2rem) var(--gutter) 6rem;
+}
+.hero__content { max-width: 560px; }
+
+.hero__badge { margin-bottom: var(--space-m); }
+.hero__title { font-size: var(--fs-h1); margin-bottom: var(--space-m); text-wrap: balance; }
+/* Слово «родини» підкреслене жовтою «маркерною» лінією */
+.hero__title-accent {
+  position: relative;
+  white-space: nowrap;
+  color: var(--c-yellow);
+}
+.hero__title-accent::after {
+  content: "";
+  position: absolute;
+  left: -2%; right: -2%; bottom: -0.12em;
+  height: 0.28em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cpath d='M3 14 C40 4 90 4 120 10 S180 16 197 6' fill='none' stroke='%236CAB3C' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  transform-origin: left;
+  animation: draw-line 1s 1.1s var(--ease-out) both;
+}
+.hero__lead {
+  max-width: 520px;
+  margin-bottom: var(--space-l);
+  font-size: var(--fs-lead);
+  font-weight: 600;
+  color: var(--c-cream);
+  opacity: 0.95;
+}
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-m); margin-bottom: var(--space-l); }
+
+.hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--c-light);
+}
+.hero__fact { display: inline-flex; align-items: center; gap: 0.45rem; }
+.hero__fact svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* Картка заводчика */
+.breeder-card {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-s);
+  margin-top: var(--space-l);
+  padding: 0.5rem 1.2rem 0.5rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.breeder-card__photo {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 3px solid var(--c-green);
+  object-fit: cover;
+}
+.breeder-card__name { font-family: var(--font-hand); font-size: 1.5rem; font-weight: 700; line-height: 1; color: var(--c-yellow); }
+.breeder-card__role { font-size: 0.8125rem; font-weight: 600; color: var(--c-light); }
+
+/* Підказка «поводіть кісточкою» */
+.hero__hint {
+  position: absolute;
+  top: 13%;
+  left: 40%;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--c-yellow);
+  transform: rotate(-6deg);
+  transition: opacity 0.6s, transform 0.6s var(--ease-out);
+  pointer-events: none;
+}
+.hero__hint svg { width: 64px; height: 48px; margin-top: 0.6rem; }
+.hero__hint--hidden { opacity: 0; transform: rotate(-6deg) translateY(-10px); }
+
+/* Хвиля-перехід до наступного блоку */
+.hero__wave {
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  z-index: 1;
+  width: 100%;
+  height: clamp(40px, 6vw, 90px);
+  color: var(--c-cream);
+}
+
+/* ---------- 7. Анімації ---------- */
+@keyframes btn-shine {
+  0% { left: -80%; }
+  45%, 100% { left: 130%; }
+}
+@keyframes doodle-float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-12px) rotate(6deg); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes draw-line {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Поява елементів Hero каскадом */
+.hero__content > * { animation: fade-up 0.9s var(--ease-out) both; }
+.hero__content > :nth-child(2) { animation-delay: 0.1s; }
+.hero__content > :nth-child(3) { animation-delay: 0.2s; }
+.hero__content > :nth-child(4) { animation-delay: 0.3s; }
+.hero__content > :nth-child(5) { animation-delay: 0.4s; }
+.hero__content > :nth-child(6) { animation-delay: 0.5s; }
+
+/* Універсальна поява при прокручуванні: додайте data-reveal будь-якому блоку */
+[data-reveal] { opacity: 0; transform: translateY(30px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* ---------- 8. Адаптив ---------- */
+
+/* Ноутбук / планшет горизонтально: менше простору зліва — посилюємо затемнення */
+@media (max-width: 1180px) {
+  .nav__list { gap: 1rem; }
+  .nav__link { font-size: 0.92rem; }
+  .hero__overlay {
+    background:
+      linear-gradient(90deg, rgba(6, 27, 61, 0.92) 0%, rgba(6, 27, 61, 0.7) 40%, rgba(6, 27, 61, 0.1) 70%),
+      linear-gradient(0deg, rgba(6, 27, 61, 0.55) 0%, rgba(6, 27, 61, 0) 30%);
+  }
+  .hero__content { max-width: 500px; }
+}
+
+/* Невисокі екрани ноутбуків (напр. 1280×720, 1366×768): ущільнюємо по вертикалі, щоб усе вміщалось */
+@media (min-width: 1025px) and (max-height: 800px) {
+  .hero__inner { padding-top: calc(var(--header-h) + 0.5rem); padding-bottom: 4rem; }
+  .hero__badge { margin-bottom: var(--space-s); }
+  .hero__title { margin-bottom: var(--space-s); }
+  .hero__lead { margin-bottom: var(--space-m); }
+  .hero__actions { margin-bottom: var(--space-m); }
+  .breeder-card { margin-top: var(--space-m); }
+}
+
+/* Крапки-дудл — лише на великих моніторах, де зліва є місце */
+@media (max-width: 1499px) {
+  .doodle--dots { display: none; }
+}
+
+/* Планшет: ховаємо меню в бургер */
+@media (max-width: 1024px) {
+  .nav, .header__cta { display: none; }
+  .burger { display: block; }
+  .header__actions { margin-left: auto; }
+  .hero__hint { display: none; }
+}
+
+/* Мобільний і планшет вертикально: собаки зверху, текст знизу */
+@media (max-width: 820px), (max-aspect-ratio: 5/4) {
+  /* Собаки — смугою зверху (видно всіх трьох), текст — під ними на синьому */
+  .hero { align-items: flex-start; background: var(--c-navy-deep); }
+  .hero__bg { display: none; }
+  .hero__poster, .hero__canvas {
+    --media-h: min(94vw, 62svh);
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+    width: 100%;
+    height: var(--media-h);
+    aspect-ratio: auto;
+    object-position: 80% 20%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+  }
+  .hero__overlay {
+    background: linear-gradient(180deg, rgba(6, 27, 61, 0.55) 0%, rgba(6, 27, 61, 0) 22%);
+  }
+  .hero__inner {
+    padding-top: calc(min(94vw, 62svh) - 3.5rem);
+    padding-bottom: clamp(4rem, 12vw, 6rem);
+  }
+  .hero__content { max-width: 560px; }
+  .doodle--paw { top: auto; bottom: 8%; left: auto; right: 6%; --size: 52px; }
+  .doodle--heart { display: none; }
+  .doodle--crown { top: auto; bottom: calc(100% - min(94vw, 62svh) + 2rem); right: 5%; --size: 48px; }
+  .doodle--dots { display: none; }
+  .doodle--wave { display: none; }
+}
+
+@media (max-width: 560px) {
+  :root { --header-h: 72px; }
+  .logo__mark { width: 40px; height: 36px; }
+  .logo__happy { font-size: 1.15rem; }
+  .logo__stacyland { font-size: 1.35rem; }
+  .header__icon--hide-mobile { display: none; }
+  .hero__lead { font-size: 1rem; margin-bottom: var(--space-m); }
+  .hero__actions { flex-direction: column; margin-bottom: var(--space-m); }
+  .hero__actions .btn { width: 100%; }
+  .hero__facts { gap: 0.4rem 1rem; font-size: 0.8125rem; }
+  .breeder-card { margin-top: var(--space-m); }
+}
