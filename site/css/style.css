@@ -28,7 +28,7 @@
   --font-hand: "Caveat", cursive;
 
   /* Розміри тексту (плавно масштабуються від мобільного до десктопу) */
-  --fs-h1: clamp(2.25rem, 1.25rem + 2.5vw, 3.8rem);
+  --fs-h1: clamp(2rem, 0.75rem + 2vw, 3rem);
   --fs-h2: clamp(1.75rem, 1.2rem + 2vw, 3rem);
   --fs-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
   --fs-body: 1rem;
@@ -214,19 +214,36 @@ a, button {
   padding: 0 var(--gutter);
 }
 
-/* Логотип-напис (спрощена версія логотипу з серцем для малих розмірів) */
+/* Ліва частина шапки: логотипи UKU/FCI + логотип розплідника */
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-shrink: 0;
+}
+.header__orgs {
+  width: auto;
+  height: 44px;
+  transition: height 0.35s var(--ease-out);
+}
+.header--scrolled .header__orgs { height: 38px; }
+
+/* Логотип розплідника: собачка з серцем + напис */
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  flex-shrink: 0;
+  gap: 0.45rem;
 }
-.logo__mark { width: 46px; height: 42px; color: currentColor; }
-.logo__mark-heart { stroke: currentColor; }
-.logo__mark-paw { fill: var(--c-yellow); }
-.logo__text { display: flex; flex-direction: column; line-height: 0.9; }
+.logo__mark {
+  width: auto;
+  height: 56px;
+  transition: height 0.35s var(--ease-out), transform 0.4s var(--ease-out);
+}
+.logo:hover .logo__mark { transform: rotate(-6deg) scale(1.05); }
+.header--scrolled .logo__mark { height: 48px; }
+.logo__text { display: flex; flex-direction: column; line-height: 0.88; }
 .logo__happy { font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; }
-.logo__stacyland { font-family: var(--font-hand); font-weight: 700; font-size: 1.55rem; color: var(--c-green); }
+.logo__stacyland { font-family: var(--font-hand); font-weight: 700; font-size: 1.9rem; color: var(--c-green); }
 
 .nav { margin-left: auto; }
 .nav__list { display: flex; gap: clamp(1rem, 1.8vw, 2rem); }
@@ -321,6 +338,8 @@ a, button {
 
 /* ---------- 6. Hero ---------- */
 .hero {
+  /* Ширина рамки відео на десктопі; від неї залежать і плашки переваг */
+  --media-w: min(82vw, calc(100svh * 16 / 9));
   position: relative;
   display: flex;
   align-items: center;
@@ -354,7 +373,7 @@ a, button {
   bottom: 0;
   z-index: -3;
   /* Ширина підібрана так, щоб собаки починались одразу після тексту на будь-якому екрані */
-  width: min(82vw, calc(100svh * 16 / 9));
+  width: var(--media-w);
   aspect-ratio: 16 / 9;
   height: auto;
   object-fit: cover;
@@ -390,18 +409,35 @@ a, button {
 .doodle--heart { --size: 58px; bottom: 20%; left: 41%; --delay: 1.3s; }
 .doodle--crown { --size: 70px; top: 13%; right: 9%; --delay: 0.6s; }
 .doodle--dots { --size: 40px; top: 30%; left: 1.2%; --delay: 2s; }
-.doodle--wave { --size: 120px; bottom: 11%; right: 6%; height: 40px; --delay: 1.8s; }
+/* Хвиля поки прихована: її місце на грудях собак зайняли плашки переваг */
+.doodle--wave { --size: 120px; bottom: 11%; right: 6%; height: 40px; --delay: 1.8s; display: none; }
 
 .hero__inner {
   width: 100%;
   max-width: var(--container-wide);
   margin: 0 auto;
-  padding: calc(var(--header-h) + 2rem) var(--gutter) 6rem;
+  padding: calc(var(--header-h) + 3.5rem) var(--gutter) 6rem;  /* зверху — місце під шапку і бейдж */
 }
 .hero__content { max-width: 560px; }
 
-.hero__badge { margin-bottom: var(--space-m); }
-.hero__title { font-size: var(--fs-h1); margin-bottom: var(--space-m); text-wrap: balance; }
+/* Бейдж — одразу під логотипами в шапці, вирівняний з ними по лівому краю */
+.hero__top {
+  position: absolute;
+  top: calc(var(--header-h) - 0.25rem);
+  left: 0;
+  right: 0;
+  z-index: 2;
+  max-width: var(--container-wide);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  pointer-events: none;
+  animation: fade-up 0.9s var(--ease-out) both;
+}
+.hero__badge { pointer-events: auto; }
+
+/* Заголовок у 2 рядки: кожен рядок — окремий блок, що не переноситься на десктопі */
+.hero__title { font-size: var(--fs-h1); margin-bottom: var(--space-m); }
+.hero__title-line { display: block; white-space: nowrap; }
 /* Слово «родини» підкреслене жовтою «маркерною» лінією */
 .hero__title-accent {
   position: relative;
@@ -418,32 +454,70 @@ a, button {
   animation: draw-line 1s 1.1s var(--ease-out) both;
 }
 .hero__lead {
-  max-width: 520px;
+  max-width: 500px;
   margin-bottom: var(--space-l);
-  font-size: var(--fs-lead);
+  font-size: clamp(0.98rem, 0.92rem + 0.25vw, 1.125rem);
   font-weight: 600;
+  line-height: 1.42;
   color: var(--c-cream);
-  opacity: 0.95;
+}
+/* Ключові фрази в підзаголовку */
+.hero__mark {
+  background: none;
+  color: var(--c-yellow);
+  font-weight: 800;
 }
 .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-m); margin-bottom: var(--space-l); }
 
+/* Переваги — «медальки» на грудях собак (десктоп).
+   Список накладається точно на рамку відео (--media-w), позиції — частки кадру. */
 .hero__facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.4rem;
-  font-size: var(--fs-small);
-  font-weight: 700;
-  color: var(--c-light);
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: var(--media-w);
+  aspect-ratio: 16 / 9;
+  pointer-events: none;
 }
-.hero__fact { display: inline-flex; align-items: center; gap: 0.45rem; }
-.hero__fact svg { width: 18px; height: 18px; flex-shrink: 0; }
+.hero__fact {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem 0.35rem 0.35rem;
+  border-radius: var(--radius-pill);
+  background: rgba(247, 243, 232, 0.94);
+  box-shadow: 0 8px 22px rgba(6, 27, 61, 0.35);
+  color: var(--c-navy);
+  font-size: clamp(0.74rem, 0.45rem + 0.4vw, 0.92rem);
+  font-weight: 800;
+  white-space: nowrap;
+  transform: translate(-50%, -50%) rotate(var(--tilt));
+  animation: fact-pop 0.7s var(--ease-out) both;
+  animation-delay: var(--delay);
+}
+.hero__fact--1 { --x: 46%;   --y: 80%; --tilt: -4deg; --delay: 1.5s; }
+.hero__fact--2 { --x: 66.5%; --y: 82%; --tilt: 3deg;  --delay: 1.65s; }
+.hero__fact--3 { --x: 87%;   --y: 80%; --tilt: -3deg; --delay: 1.8s; }
+.hero__fact-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--c-yellow);
+  flex-shrink: 0;
+}
+.hero__fact svg { width: 17px; height: 17px; }
 
 /* Картка заводчика */
 .breeder-card {
   display: inline-flex;
   align-items: center;
   gap: var(--space-s);
-  margin-top: var(--space-l);
   padding: 0.5rem 1.2rem 0.5rem 0.5rem;
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.1);
@@ -502,6 +576,10 @@ a, button {
   from { opacity: 0; transform: translateY(28px); }
   to { opacity: 1; transform: none; }
 }
+@keyframes fact-pop {
+  from { opacity: 0; transform: translate(-50%, -20%) rotate(var(--tilt)) scale(0.7); }
+  to { opacity: 1; transform: translate(-50%, -50%) rotate(var(--tilt)) scale(1); }
+}
 @keyframes draw-line {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
@@ -540,12 +618,10 @@ a, button {
 
 /* Невисокі екрани ноутбуків (напр. 1280×720, 1366×768): ущільнюємо по вертикалі, щоб усе вміщалось */
 @media (min-width: 1025px) and (max-height: 800px) {
-  .hero__inner { padding-top: calc(var(--header-h) + 0.5rem); padding-bottom: 4rem; }
-  .hero__badge { margin-bottom: var(--space-s); }
+  .hero__inner { padding-top: calc(var(--header-h) + 3rem); padding-bottom: 4rem; }
   .hero__title { margin-bottom: var(--space-s); }
   .hero__lead { margin-bottom: var(--space-m); }
   .hero__actions { margin-bottom: var(--space-m); }
-  .breeder-card { margin-top: var(--space-m); }
 }
 
 /* Крапки-дудл — лише на великих моніторах, де зліва є місце */
@@ -586,6 +662,30 @@ a, button {
     padding-top: calc(min(94vw, 62svh) - 3.5rem);
     padding-bottom: clamp(4rem, 12vw, 6rem);
   }
+  /* На вузьких екранах заголовок переноситься природно */
+  .hero__title-line { display: inline; white-space: normal; }
+  .hero__title { text-wrap: balance; }
+
+  /* Переваги — звичайним списком під кнопками */
+  .hero__facts {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: auto;
+    aspect-ratio: auto;
+    margin-bottom: var(--space-m);
+  }
+  .hero__fact {
+    position: static;
+    transform: none;
+    padding: 0.3rem 0.8rem 0.3rem 0.3rem;
+    font-size: 0.8125rem;
+    box-shadow: none;
+    animation: fade-up 0.8s var(--ease-out) both;
+  }
+  .hero__fact-icon { width: 24px; height: 24px; }
+  .hero__fact svg { width: 14px; height: 14px; }
   .hero__content { max-width: 560px; }
   .doodle--paw { top: auto; bottom: 8%; left: auto; right: 6%; --size: 52px; }
   .doodle--heart { display: none; }
@@ -596,13 +696,14 @@ a, button {
 
 @media (max-width: 560px) {
   :root { --header-h: 72px; }
-  .logo__mark { width: 40px; height: 36px; }
-  .logo__happy { font-size: 1.15rem; }
-  .logo__stacyland { font-size: 1.35rem; }
+  .header__brand { gap: 0.5rem; }
+  .header__orgs { height: 32px; }
+  .logo__mark { height: 42px; }
+  .logo__happy { font-size: 1.05rem; }
+  .logo__stacyland { font-size: 1.5rem; }
   .header__icon--hide-mobile { display: none; }
   .hero__lead { font-size: 1rem; margin-bottom: var(--space-m); }
   .hero__actions { flex-direction: column; margin-bottom: var(--space-m); }
   .hero__actions .btn { width: 100%; }
-  .hero__facts { gap: 0.4rem 1rem; font-size: 0.8125rem; }
   .breeder-card { margin-top: var(--space-m); }
 }

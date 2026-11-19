@@ -26,22 +26,19 @@
   <!-- ===================== ШАПКА ===================== -->
   <header class="header" id="header">
     <div class="header__inner">
-      <a class="logo" href="index.html" aria-label="Happy Stacyland — на головну">
-        <svg class="logo__mark" viewBox="0 0 46 42" aria-hidden="true">
-          <path class="logo__mark-heart" d="M23 38 C10 29 3 22 3 13 C3 6.5 8 2.5 13.5 2.5 C17.5 2.5 21 5 23 8.5 C25 5 28.5 2.5 32.5 2.5 C38.5 2.5 43 7 43 13.5 C43 22 36 29 23 38 Z" fill="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
-          <g class="logo__mark-paw">
-            <ellipse cx="23" cy="22.5" rx="5" ry="4"/>
-            <ellipse cx="16.8" cy="17.8" rx="2.1" ry="2.7"/>
-            <ellipse cx="20.6" cy="14.6" rx="2.1" ry="2.7"/>
-            <ellipse cx="25.4" cy="14.6" rx="2.1" ry="2.7"/>
-            <ellipse cx="29.2" cy="17.8" rx="2.1" ry="2.7"/>
-          </g>
-        </svg>
-        <span class="logo__text">
-          <span class="logo__happy">Happy</span>
-          <span class="logo__stacyland">Stacyland</span>
-        </span>
-      </a>
+      <div class="header__brand">
+        <!-- Логотипи організацій (UKU та FCI) -->
+        <img class="header__orgs" src="assets/images/logo-fci-uku.webp" width="209" height="120"
+             alt="Члени Кінологічної спілки України (UKU) та FCI">
+        <!-- Логотип розплідника: собачка з серцем + напис -->
+        <a class="logo" href="index.html" aria-label="Happy Stacyland — на головну">
+          <img class="logo__mark" src="assets/images/logo-dog.webp" width="183" height="180" alt="">
+          <span class="logo__text">
+            <span class="logo__happy">Happy</span>
+            <span class="logo__stacyland">Stacyland</span>
+          </span>
+        </a>
+      </div>
 
       <nav class="nav" aria-label="Головне меню">
         <ul class="nav__list">
@@ -135,16 +132,23 @@
         </svg>
       </p>
 
+      <!-- Бейдж одразу під логотипами в шапці -->
+      <div class="hero__top">
+        <span class="badge hero__badge">Розплідник FCI · UKU · м. Чернівці</span>
+      </div>
+
       <div class="hero__inner">
         <div class="hero__content">
-          <span class="badge hero__badge">Розплідник FCI · UKU</span>
-
+          <!-- Заголовок свідомо у 2 рядки -->
           <h1 class="hero__title" id="hero-title">
-            Цвергпінчери, які стають частиною <span class="hero__title-accent">родини</span>
+            <span class="hero__title-line">Цвергпінчери, які стають</span>
+            <span class="hero__title-line">частиною <span class="hero__title-accent">родини</span></span>
           </h1>
 
           <p class="hero__lead">
-            Виховуємо цуценят у сім'ї з перших днів життя і залишаємось поруч з вами усе життя собаки.
+            Наші пінчери зростають <mark class="hero__mark">у сімейному оточенні</mark> з перших днів життя.
+            Ми допомагаємо майбутнім власникам підготуватися та залишаємося
+            <mark class="hero__mark">на зв'язку протягом усього життя собаки</mark>.
           </p>
 
           <div class="hero__actions">
@@ -152,26 +156,27 @@
             <a class="btn btn--ghost-light" href="about.html">Познайомитися з нами</a>
           </div>
 
+          <!-- Переваги: на десктопі — «медальки» на грудях собак, на мобільному — список під кнопками -->
           <ul class="hero__facts">
-            <li class="hero__fact">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#FFC700" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.4-9.3C1.2 8.2 3.4 4.5 7 4.5c2.2 0 3.7 1.3 5 3 1.3-1.7 2.8-3 5-3 3.6 0 5.8 3.7 4.4 7.2C19.5 16.4 12 21 12 21z"/></svg>
+            <li class="hero__fact hero__fact--1">
+              <span class="hero__fact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0B2D61" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.4-9.3C1.2 8.2 3.4 4.5 7 4.5c2.2 0 3.7 1.3 5 3 1.3-1.7 2.8-3 5-3 3.6 0 5.8 3.7 4.4 7.2C19.5 16.4 12 21 12 21z"/></svg></span>
               15+ років з породою
             </li>
-            <li class="hero__fact">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#FFC700" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 14l2 2 4-4"/></svg>
-              Документи FCI · UKU
+            <li class="hero__fact hero__fact--2">
+              <span class="hero__fact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0B2D61" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17 L3 7 L8.5 11.5 L12 5 L15.5 11.5 L21 7 L20 17 Z"/><path d="M4.5 20.5 H19.5"/></svg></span>
+              Чемпіонські лінії
             </li>
-            <li class="hero__fact">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#FFC700" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/></svg>
-              Підтримка після переїзду
+            <li class="hero__fact hero__fact--3">
+              <span class="hero__fact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0B2D61" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10 H20.5"/><path d="M8 3 V6.5"/><path d="M16 3 V6.5"/><path d="M12 13.2c-.9-1.3-3-1-3 .7 0 1.4 3 3.1 3 3.1s3-1.7 3-3.1c0-1.7-2.1-2-3-.7z"/></svg></span>
+              1–2 приплоди на рік
             </li>
           </ul>
 
           <a class="breeder-card" href="about.html">
-            <img class="breeder-card__photo" src="assets/images/breeder-avatar.webp" width="56" height="56" alt="Заводчиця Анастасія з цуценям цвергпінчера" loading="lazy">
+            <img class="breeder-card__photo" src="assets/images/breeder-avatar.webp" width="56" height="56" alt="Заводчик-кінолог Анастасія Пріньковська з цуценям цвергпінчера">
             <span>
-              <span class="breeder-card__name">Анастасія</span><br>
-              <span class="breeder-card__role">заводчиця Happy Stacyland</span>
+              <span class="breeder-card__name">Анастасія Пріньковська</span><br>
+              <span class="breeder-card__role">(Довгань) · заводчик-кінолог</span>
             </span>
           </a>
         </div>
