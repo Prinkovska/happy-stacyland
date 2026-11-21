@@ -5,6 +5,7 @@
 !/docs/
 !/CLAUDE.md
 !/.gitignore
+!/.github/
 !/.claude/
 /.claude/*
 !/.claude/serve.ps1
