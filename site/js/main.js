@@ -4,7 +4,20 @@
    2. Hero: собаки стежать поглядом за курсором-кісточкою
    3. Hero: дудли рухаються за курсором (паралакс)
    4. Поява блоків при прокручуванні
+   5. Форми (анкета, чек-лист)
+   6. Слайдер відгуків
+   7. Плаваюча кнопка на телефоні
+   8. Квіз «Чи підходить вам цвергпінчер?»
    ========================================================= */
+
+/* Налаштування сайту.
+   formEndpoint — адреса, куди надсилаються заявки з форм.
+   Поки порожня, форми показують запасне повідомлення.
+   Після переходу на Vercel: '/api/lead' (функція site/api/lead.js пересилає заявки в Telegram). */
+var SITE = {
+  formEndpoint: '',                                             /* ЗМІНИТИ після підключення Vercel */
+  instagram: 'https://instagram.com/anactacya_happy_stacyland'
+};
 
 (function () {
   'use strict';
@@ -15,9 +28,11 @@
   var header = document.getElementById('header');
   var burger = document.querySelector('.burger');
   var mobileMenu = document.getElementById('mobile-menu');
+  /* На внутрішніх сторінках (без Hero) шапка завжди біла */
+  var solidHeader = header && header.hasAttribute('data-solid');
 
   function onScroll() {
-    header.classList.toggle('header--scrolled', window.scrollY > 40);
+    header.classList.toggle('header--scrolled', solidHeader || window.scrollY > 40);
   }
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -261,4 +276,194 @@
   } else {
     revealItems.forEach(function (el) { el.classList.add('is-visible'); });
   }
+
+  /* ---------- 5. Форми (анкета, чек-лист) ---------- */
+  function setStatus(el, type, html) {
+    if (!el) return;
+    el.className = 'form__status form__status--' + type;
+    el.innerHTML = html;
+  }
+
+  /* Відповіді анкети одним текстом — щоб людина могла надіслати їх у месенджер,
+     поки прийом заявок не підключено */
+  function formToText(form) {
+    var lines = [];
+    form.querySelectorAll('[name]').forEach(function (f) {
+      if (f.name === 'website' || f.name === 'consent') return;
+      if ((f.type === 'radio' || f.type === 'checkbox') && !f.checked) return;
+      var value = (f.value || '').trim();
+      if (!value) return;
+      var group = f.closest('.field');
+      var label = group && group.querySelector('.field__label');
+      var title = label ? label.textContent.replace(/\*|\(.*?\)/g, '').trim() : f.name;
+      lines.push(title + ': ' + value);
+    });
+    return lines.join('\n');
+  }
+
+  function sendLead(payload) {
+    if (!SITE.formEndpoint) return Promise.resolve({ fallback: true });
+    return fetch(SITE.formEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (res) {
+      if (!res.ok) throw new Error('send failed');
+      return { fallback: false };
+    });
+  }
+
+  document.querySelectorAll('[data-lead-form]').forEach(function (form) {
+    var status = form.querySelector('.form__status');
+    var button = form.querySelector('[type="submit"]');
+
+    /* Прибираємо помилку, щойно людина виправила поле */
+    form.addEventListener('input', function (e) {
+      var f = e.target;
+      if (f.getAttribute('aria-invalid') === 'true') {
+        f.setAttribute('aria-invalid', 'false');
+        var err = f.closest('.field') && f.closest('.field').querySelector('.field__error');
+        if (err) err.textContent = '';
+      }
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      /* Перевірка обов'язкових полів */
+      var firstInvalid = null;
+      form.querySelectorAll('[required]').forEach(function (f) {
+        var valid;
+        if (f.type === 'checkbox') valid = f.checked;
+        else if (f.type === 'radio') valid = !!form.querySelector('input[name="' + f.name + '"]:checked');
+        else valid = f.value.trim() !== '';
+        f.setAttribute('aria-invalid', String(!valid));
+        var err = f.closest('.field') && f.closest('.field').querySelector('.field__error');
+        if (err) err.textContent = valid ? '' : (f.type === 'radio' ? 'Оберіть варіант' : 'Заповніть, будь ласка');
+        if (!valid && !firstInvalid) firstInvalid = f;
+      });
+      if (firstInvalid) {
+        setStatus(status, 'error', 'Будь ласка, заповніть позначені поля і погодьтесь з політикою конфіденційності.');
+        firstInvalid.focus();
+        return;
+      }
+
+      /* Пастка для спам-ботів */
+      if (form.querySelector('[name="website"]') && form.querySelector('[name="website"]').value) return;
+
+      var data = {};
+      new FormData(form).forEach(function (value, key) {
+        if (key === 'website') return;
+        data[key] = data[key] ? data[key] + ', ' + value : value;
+      });
+
+      button.disabled = true;
+      sendLead({ form: form.dataset.leadForm, page: location.pathname, data: data })
+        .then(function (result) {
+          var isGuide = form.dataset.leadForm === 'guide';
+          var successUrl = form.dataset.successUrl;
+
+          if (isGuide) {
+            try { localStorage.setItem('hs-guide', '1'); } catch (err) { /* без сховища теж працює */ }
+            setStatus(status, 'ok', 'Дякуємо! Відкриваємо чек-лист… <a href="' + successUrl + '">Відкрити зараз</a>');
+            setTimeout(function () { location.href = successUrl; }, 1200);
+            return;
+          }
+
+          if (result.fallback) {
+            /* Прийом заявок ще не підключено — даємо людині надіслати анкету самій */
+            setStatus(status, 'info',
+              'Дякуємо! Прийом анкет на сайті ще налаштовується. Щоб ваша анкета не загубилась, ' +
+              'скопіюйте відповіді і надішліть їх нам в Instagram.<br><br>' +
+              '<button type="button" class="btn btn--small btn--navy" data-copy-answers>Скопіювати відповіді</button> ' +
+              '<a class="btn btn--small btn--outline" href="' + SITE.instagram + '" target="_blank" rel="noopener">Відкрити Instagram</a>');
+            var copyBtn = status.querySelector('[data-copy-answers]');
+            copyBtn.addEventListener('click', function () {
+              var text = 'Анкета майбутнього власника (Happy Stacyland)\n\n' + formToText(form);
+              (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+                .then(function () { copyBtn.textContent = 'Скопійовано ✓'; })
+                .catch(function () { window.prompt('Скопіюйте відповіді:', text); });
+            });
+            return;
+          }
+
+          setStatus(status, 'ok', 'Дякуємо! Ви в листі очікування Happy Stacyland. Я зв\'яжуся з вами найближчим часом.');
+          form.reset();
+        })
+        .catch(function () {
+          setStatus(status, 'error', 'Не вдалося надіслати. Спробуйте ще раз або напишіть нам в <a href="' + SITE.instagram + '" target="_blank" rel="noopener">Instagram</a>.');
+        })
+        .then(function () { button.disabled = false; });
+    });
+  });
+
+  /* ---------- 6. Слайдер відгуків ---------- */
+  document.querySelectorAll('[data-slider]').forEach(function (track) {
+    var nav = track.nextElementSibling;
+    if (!nav) return;
+    function step(dir) {
+      var card = track.firstElementChild;
+      var amount = card ? card.getBoundingClientRect().width + 20 : 300;
+      track.scrollBy({ left: dir * amount, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+    var prev = nav.querySelector('[data-slider-prev]');
+    var next = nav.querySelector('[data-slider-next]');
+    if (prev) prev.addEventListener('click', function () { step(-1); });
+    if (next) next.addEventListener('click', function () { step(1); });
+  });
+
+  /* ---------- 7. Плаваюча кнопка на телефоні ---------- */
+  var mobileCta = document.querySelector('.mobile-cta');
+  if (mobileCta) {
+    var onCtaScroll = function () {
+      var nearBottom = window.scrollY + window.innerHeight > document.documentElement.scrollHeight - 900;
+      mobileCta.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.9 && !nearBottom);
+    };
+    onCtaScroll();
+    window.addEventListener('scroll', onCtaScroll, { passive: true });
+  }
+
+  /* ---------- 8. Квіз «Чи підходить вам цвергпінчер?» ---------- */
+  document.querySelectorAll('[data-quiz]').forEach(function (quiz) {
+    var steps = quiz.querySelectorAll('.quiz__step');
+    var bar = quiz.querySelector('.quiz__bar');
+    var count = quiz.querySelector('.quiz__count');
+    var score = 0;
+    var index = 0;
+
+    function show(i) {
+      steps.forEach(function (s, n) { s.classList.toggle('is-active', n === i); });
+      if (bar) bar.style.width = (i / steps.length * 100) + '%';
+      if (count) count.textContent = 'Питання ' + (i + 1) + ' з ' + steps.length;
+    }
+
+    function finish() {
+      if (bar) bar.style.width = '100%';
+      if (count) count.textContent = 'Ваш результат';
+      steps.forEach(function (s) { s.classList.remove('is-active'); });
+      /* Результат: багато балів — порода підходить, середньо — з умовами, мало — краще інша порода */
+      var max = steps.length * 2;
+      var key = score >= max * 0.7 ? 'high' : (score >= max * 0.4 ? 'mid' : 'low');
+      var result = quiz.querySelector('.quiz__result[data-result="' + key + '"]');
+      if (result) result.classList.add('is-active');
+    }
+
+    quiz.addEventListener('click', function (e) {
+      var answer = e.target.closest('.quiz__answer');
+      if (answer) {
+        score += parseInt(answer.dataset.score, 10) || 0;
+        index += 1;
+        if (index < steps.length) show(index); else finish();
+        return;
+      }
+      if (e.target.closest('[data-quiz-restart]')) {
+        score = 0;
+        index = 0;
+        quiz.querySelectorAll('.quiz__result').forEach(function (r) { r.classList.remove('is-active'); });
+        show(0);
+      }
+    });
+
+    show(0);
+  });
 })();
