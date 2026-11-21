@@ -1480,3 +1480,25 @@ textarea.field__input { min-height: 110px; resize: vertical; }
   .checklist__item, .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
 }
+
+/* Hero: головна кнопка + легке текстове посилання — в один ряд, на рівні плашок */
+.hero__actions { flex-wrap: nowrap; align-items: center; gap: var(--space-s); }
+.hero__actions .btn--primary { padding: 0 1.6rem; white-space: nowrap; }
+.btn--text-light {
+  padding: 0 0.6rem;
+  border: 0;
+  background: none;
+  color: var(--c-white);
+  white-space: nowrap;
+}
+.btn--text-light:hover { transform: none; color: var(--c-yellow); }
+.btn--text-light span { display: inline-block; transition: transform 0.3s var(--ease-out); }
+.btn--text-light:hover span { transform: translateX(5px); }
+@media (max-width: 1440px) {
+  .hero__actions .btn--primary { padding: 0 1.3rem; font-size: 1rem; }
+  .btn--text-light { font-size: 1rem; }
+}
+@media (max-width: 560px) {
+  .hero__actions { flex-wrap: wrap; }
+  .btn--text-light { min-height: 44px; }
+}
