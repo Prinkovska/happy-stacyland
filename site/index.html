@@ -20,7 +20,7 @@
 
   <link rel="icon" href="assets/images/favicon.png" type="image/png">
   <link rel="preload" as="image" href="assets/hero/frame-00.webp">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2026-11-26">
 </head>
 <body>
 
@@ -225,42 +225,35 @@
       </div>
     </section>
 
-    <!-- ===================== ДЛЯ КОГО ЦВЕРГПІНЧЕР ===================== -->
+    <!-- ===================== ЧИ ПІДХОДИТЬ ВАМ ЦВЕРГПІНЧЕР (самоперевірка) =====================
+         Людина відповідає «Так / Ще ні» на 8 тверджень, ліворуч росте відсоток і змінюється поза пінчера.
+         Логіка — main.js, розділ 10 ([data-fit]). -->
     <section class="section section--white" id="fit" aria-labelledby="fit-title">
-      <img class="mascot mascot--fit" data-from="pop" src="assets/mascots/jump.webp" width="498" height="640" loading="lazy" alt="" aria-hidden="true">
       <div class="container">
-        <div class="section-head" data-reveal>
-          <span class="eyebrow">Для кого ця порода</span>
-          <h2 class="section-title" id="fit-title">Чи <mark>ваш</mark> це собака?</h2>
-          <p class="section-lead">Цвергпінчер — маленький собака з характером великого. Чесно про те, кому він підійде.</p>
-        </div>
+        <h2 class="section-title fit-check__title" id="fit-title" data-reveal>Чи підходить вам <mark>цвергпінчер</mark>?</h2>
 
-        <div class="fit-grid">
-          <article class="card" data-reveal>
-            <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
-            <h3 class="card__title">Для квартири</h3>
-            <p class="card__text">Важить 4–6 кг, гладкошерстий, майже не пахне. Але щодня потребує прогулянок і гри.</p>
-          </article>
-          <article class="card" data-reveal>
-            <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15 20c0-2 1-3.5 2-3.5s3 1 3 3.5"/></svg></span>
-            <h3 class="card__title">Для сімей з дітьми</h3>
-            <p class="card__text">Грайливий і веселий, добре ладнає зі школярами. З малюками — під наглядом дорослих: він маленький і тендітний.</p>
-          </article>
-          <article class="card" data-reveal>
-            <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="4.5" r="2"/><path d="M8 21l3-6 3 2v4"/><path d="M6 12l3-4 4 1 3 4h3"/></svg></span>
-            <h3 class="card__title">Для активних</h3>
-            <p class="card__text">Обожнює бігати, вчити команди й нові ігри. Без руху нудьгує — і тоді вигадує розваги сам.</p>
-          </article>
-          <article class="card" data-reveal>
-            <span class="card__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-9.4-9.3C1.2 8.2 3.4 4.5 7 4.5c2.2 0 3.7 1.3 5 3 1.3-1.7 2.8-3 5-3 3.6 0 5.8 3.7 4.4 7.2C19.5 16.4 12 21 12 21z"/></svg></span>
-            <h3 class="card__title">Для тих, хто поруч</h3>
-            <p class="card__text">Розумний, пильний і дуже відданий родині. Не для тих, хто надовго лишає собаку саму.</p>
-          </article>
-        </div>
+        <div class="fit-check" data-fit>
+          <div class="fit-check__score">
+            <p class="fit-check__percent" aria-live="polite"><span data-fit-percent>0</span>%</p>
+            <div class="fit-check__bar" aria-hidden="true"><span data-fit-bar></span></div>
+            <h3 class="fit-check__verdict" data-fit-verdict>Відповідайте на 8 питань</h3>
+            <p class="fit-check__text" data-fit-text>
+              Чесний тест від заводчика: цвергпінчер — маленький собака з характером великого. Подивимось, чи збігаєтесь.
+            </p>
+            <a class="btn btn--primary fit-check__cta" data-fit-cta href="breed.html#quiz">Детальніше про породу</a>
+            <img class="fit-check__dog" data-fit-dog src="assets/mascots/tilt.webp" width="640" height="626" loading="lazy" alt="" aria-hidden="true">
+          </div>
 
-        <div class="fit-cta" data-reveal>
-          <p class="fit-cta__text">Не впевнені? <span>Пройдіть тест за 1 хвилину</span> — і дізнайтесь, чи підходить вам цвергпінчер.</p>
-          <a class="btn btn--yellow" href="breed.html#quiz">Пройти тест</a>
+          <ul class="fit-check__list">
+            <li class="fit-row"><span class="fit-row__q">Готові гуляти й гратися із собакою щодня — щонайменше годину</span><span class="fit-row__toggle"><button type="button" data-v="1">Так</button><button type="button" data-v="0">Ще ні</button></span></li>
+            <li class="fit-row"><span class="fit-row__q">Собака буде сама не більше 6 годин на день</span><span class="fit-row__toggle"><button type="button" data-v="1">Так</button><button type="button" data-v="0">Ще ні</button></span></li>
+            <li class="fit-row"><span class="fit-row__q">Дітей немає або вони вже вміють обережно гратися з маленькою собакою</span><span class="fit-row__toggle"><button type="button" data-v="1">Так</button><button type="button" data-v="0">Ще ні</button></span></li>
+            <li class="fit-row"><span class="fit-row__q">Готові навчити собаку, коли гавкати можна, а коли ні</span><span class="fit-row__toggle"><button type="button" data-v="1">Так</button><button type="button" data-v="0">Ще ні</button></span></li>
+            <li class="fit-row"><span class="fit-row__q">Хочете розумного друга з характером, а не «іграшку на руки»</span><span class="fit-row__toggle"><button type="button" data-v="1">Так</button><button type="button" data-v="0">Ще ні</button></span></li>
+            <li class="fit-row"><span class="fit-row__q">У перші місяці буде час на виховання і соціалізацію</span><span class="fit-row__toggle"><button type="button" data-v="1">Так</button><button type="button" data-v="0">Ще ні</button></span></li>
+            <li class="fit-row"><span class="fit-row__q">Готові вдягати собаку взимку — у нього майже немає підшерстя</span><span class="fit-row__toggle"><button type="button" data-v="1">Так</button><button type="button" data-v="0">Ще ні</button></span></li>
+            <li class="fit-row"><span class="fit-row__q">Уся родина «за» нового члена сім'ї</span><span class="fit-row__toggle"><button type="button" data-v="1">Так</button><button type="button" data-v="0">Ще ні</button></span></li>
+          </ul>
         </div>
       </div>
     </section>
@@ -299,7 +292,9 @@
       </div>
     </section>
 
-    <!-- ===================== НАШІ СОБАКИ ===================== -->
+    <!-- ===================== НАШІ СОБАКИ (галерея, що розгортається) =====================
+         Одна панель розгорнута, інші вузькі з вертикальним ім'ям. Наведення/клік — розгортає.
+         Логіка — main.js, розділ 11 ([data-panels]). -->
     <section class="section section--white" id="dogs" aria-labelledby="dogs-title">
       <div class="container">
         <div class="section-head" data-reveal>
@@ -309,47 +304,59 @@
           <p class="todo" style="margin-top: 0.8rem;">уточнити: хто на якому фото, імена, титули, дати народження</p>
         </div>
 
-        <div class="dogs-grid">
-          <a class="dog-card" href="dogs.html" data-reveal>
-            <img class="dog-card__img" src="assets/images/dog-1.webp" width="1400" height="1000" loading="lazy" alt="Чорно-підпалий кобель цвергпінчера у виставковій стійці">
-            <div class="dog-card__body">
+        <div class="dog-panels" data-panels data-reveal>
+          <article class="dog-panel is-active" tabindex="0">
+            <img class="dog-panel__img" src="assets/images/dog-1.webp" width="1400" height="1000" loading="lazy" alt="Чорно-підпалий кобель цвергпінчера Остін у виставковій стійці">
+            <h3 class="dog-panel__label">Остін</h3>
+            <div class="dog-panel__body">
               <span class="dog-card__sex">Кобель</span>
-              <h3 class="dog-card__name">Остін</h3>
-              <p class="dog-card__meta">Чорно-підпалий · пателла 0/0</p>
-              <div class="dog-card__more"><span>Титули: <span class="todo">уточнити</span></span></div>
+              <h3 class="dog-panel__name">Остін</h3>
+              <p class="dog-panel__meta">Чорно-підпалий · пателла 0/0 · титули <span class="todo">уточнити</span></p>
+              <div class="btn-row">
+                <a class="btn btn--primary btn--small" href="dogs.html">Родовід і титули</a>
+                <a class="btn btn--ghost-light btn--small" href="contacts.html#anketa">Хочу цуценя</a>
+              </div>
             </div>
-          </a>
-          <a class="dog-card" href="dogs.html" data-reveal>
-            <img class="dog-card__img" src="assets/images/dog-2.webp" width="1400" height="933" loading="lazy" alt="Руда сука цвергпінчера Фея стоїть на траві">
-            <div class="dog-card__body">
+          </article>
+          <article class="dog-panel" tabindex="0">
+            <img class="dog-panel__img" src="assets/images/dog-2.webp" width="1400" height="933" loading="lazy" alt="Руда сука цвергпінчера Фея стоїть на траві">
+            <h3 class="dog-panel__label">Фея</h3>
+            <div class="dog-panel__body">
               <span class="dog-card__sex dog-card__sex--female">Сука</span>
-              <h3 class="dog-card__name">Фея</h3>
-              <p class="dog-card__meta">Руда · пателла 0/0</p>
-              <div class="dog-card__more"><span>Титули: <span class="todo">уточнити</span></span></div>
+              <h3 class="dog-panel__name">Фея</h3>
+              <p class="dog-panel__meta">Руда · пателла 0/0 · титули <span class="todo">уточнити</span></p>
+              <div class="btn-row">
+                <a class="btn btn--primary btn--small" href="dogs.html">Родовід і титули</a>
+                <a class="btn btn--ghost-light btn--small" href="contacts.html#anketa">Хочу цуценя</a>
+              </div>
             </div>
-          </a>
-          <a class="dog-card" href="dogs.html" data-reveal>
-            <img class="dog-card__img" src="assets/images/dog-3.webp" width="933" height="1400" loading="lazy" alt="Руда сука цвергпінчера дивиться в камеру">
-            <div class="dog-card__body">
+          </article>
+          <article class="dog-panel" tabindex="0">
+            <img class="dog-panel__img" src="assets/images/dog-3.webp" width="933" height="1400" loading="lazy" alt="Руда сука цвергпінчера дивиться в камеру">
+            <h3 class="dog-panel__label">Ім'я — уточнити</h3>
+            <div class="dog-panel__body">
               <span class="dog-card__sex dog-card__sex--female">Сука</span>
-              <h3 class="dog-card__name"><span class="todo">ім'я</span></h3>
-              <p class="dog-card__meta">Руда · пателла 0/0</p>
-              <div class="dog-card__more"><span>Титули: <span class="todo">уточнити</span></span></div>
+              <h3 class="dog-panel__name"><span class="todo">ім'я</span></h3>
+              <p class="dog-panel__meta">Руда · пателла 0/0 · титули <span class="todo">уточнити</span></p>
+              <div class="btn-row">
+                <a class="btn btn--primary btn--small" href="dogs.html">Родовід і титули</a>
+                <a class="btn btn--ghost-light btn--small" href="contacts.html#anketa">Хочу цуценя</a>
+              </div>
             </div>
-          </a>
-          <a class="dog-card" href="dogs.html" data-reveal>
-            <img class="dog-card__img" src="assets/images/dog-4.webp" width="932" height="1400" loading="lazy" alt="Чорно-підпала сука цвергпінчера стоїть на дерев'яному помості">
-            <div class="dog-card__body">
+          </article>
+          <article class="dog-panel" tabindex="0">
+            <img class="dog-panel__img" src="assets/images/dog-4.webp" width="932" height="1400" loading="lazy" alt="Чорно-підпала сука цвергпінчера стоїть на дерев'яному помості">
+            <h3 class="dog-panel__label">Ім'я — уточнити</h3>
+            <div class="dog-panel__body">
               <span class="dog-card__sex dog-card__sex--female">Сука</span>
-              <h3 class="dog-card__name"><span class="todo">ім'я</span></h3>
-              <p class="dog-card__meta">Чорно-підпала · пателла 0/0</p>
-              <div class="dog-card__more"><span>Титули: <span class="todo">уточнити</span></span></div>
+              <h3 class="dog-panel__name"><span class="todo">ім'я</span></h3>
+              <p class="dog-panel__meta">Чорно-підпала · пателла 0/0 · титули <span class="todo">уточнити</span></p>
+              <div class="btn-row">
+                <a class="btn btn--primary btn--small" href="dogs.html">Родовід і титули</a>
+                <a class="btn btn--ghost-light btn--small" href="contacts.html#anketa">Хочу цуценя</a>
+              </div>
             </div>
-          </a>
-        </div>
-
-        <div class="dogs-more" data-reveal>
-          <a class="btn btn--outline" href="dogs.html">Усі собаки й родоводи</a>
+          </article>
         </div>
       </div>
     </section>
@@ -406,40 +413,74 @@
       </div>
     </section>
 
-    <!-- ===================== ЯК ОТРИМАТИ ЦУЦЕНЯ ===================== -->
+    <!-- ===================== ЯК ОТРИМАТИ ЦУЦЕНЯ (нумеровані рядки з фото) =====================
+         Активний рядок розкривається і показує теги. Наведення/клік — робить рядок активним.
+         Логіка — main.js, розділ 11 ([data-rows]). -->
     <section class="section section--navy" id="steps" aria-labelledby="steps-title">
       <div class="container">
-        <div class="section-head" data-reveal>
-          <span class="eyebrow">Як отримати цуценя</span>
-          <h2 class="section-title" id="steps-title">6 кроків до <mark>вашого</mark> цвергпінчера</h2>
-          <p class="section-lead">Без поспіху і без передоплат наосліп.</p>
+        <div class="step-rows__head" data-reveal>
+          <div>
+            <span class="eyebrow">Як отримати цуценя</span>
+            <h2 class="section-title" id="steps-title">6 кроків до <mark>вашого</mark> цвергпінчера</h2>
+            <p class="section-lead">Без поспіху і без передоплат наосліп.</p>
+          </div>
+          <p class="step-rows__badge">від анкети — до підтримки на все життя</p>
         </div>
-        <ol class="steps">
-          <li class="step" data-reveal>
-            <h3 class="step__title">Анкета власника</h3>
-            <p class="step__text">Розкажіть про себе і про друга, якого шукаєте. Це 5 хвилин.</p>
+
+        <ol class="step-rows" data-rows>
+          <li class="step-row is-active" tabindex="0">
+            <img class="step-row__img" src="assets/images/breeder-kiss.webp" alt="" aria-hidden="true" loading="lazy">
+            <span class="step-row__num">01</span>
+            <div class="step-row__body">
+              <h3 class="step-row__title">Анкета власника</h3>
+              <p class="step-row__text">Розкажіть про себе і про друга, якого шукаєте.</p>
+              <ul class="step-row__tags"><li>5 хвилин</li><li>Ні до чого не зобов'язує</li></ul>
+            </div>
           </li>
-          <li class="step" data-reveal>
-            <h3 class="step__title">Знайомство</h3>
-            <p class="step__text">Поговоримо телефоном або по відео. Можна приїхати в гості до Чернівців — за домовленістю.</p>
+          <li class="step-row" tabindex="0">
+            <img class="step-row__img" src="assets/images/breeder-two.webp" alt="" aria-hidden="true" loading="lazy">
+            <span class="step-row__num">02</span>
+            <div class="step-row__body">
+              <h3 class="step-row__title">Знайомство</h3>
+              <p class="step-row__text">Поговоримо телефоном або по відео. Можна приїхати в гості до Чернівців — за домовленістю.</p>
+              <ul class="step-row__tags"><li>Телефон</li><li>Відеодзвінок</li><li>У гостях у Чернівцях</li></ul>
+            </div>
           </li>
-          <li class="step" data-reveal>
-            <h3 class="step__title">Лист очікування</h3>
-            <p class="step__text">Повідомимо про в'язку, народження і надішлемо перші фото цуценят.</p>
+          <li class="step-row" tabindex="0">
+            <img class="step-row__img" src="assets/images/life-puppies.webp" alt="" aria-hidden="true" loading="lazy">
+            <span class="step-row__num">03</span>
+            <div class="step-row__body">
+              <h3 class="step-row__title">Лист очікування</h3>
+              <p class="step-row__text">Повідомимо про в'язку, народження і надішлемо перші фото цуценят.</p>
+              <ul class="step-row__tags"><li>Новини про в'язку</li><li>Перші фото</li><li>Ви — серед перших</li></ul>
+            </div>
           </li>
-          <li class="step" data-reveal>
-            <h3 class="step__title">Вибір і бронювання</h3>
-            <p class="step__text">Допоможу обрати цуценя за характером. Бронювання — за договором.</p>
-            <p class="todo" style="margin-top: 0.6rem;">уточнити: умови броні, завдаток</p>
+          <li class="step-row" tabindex="0">
+            <img class="step-row__img" src="assets/images/life-puppy.webp" alt="" aria-hidden="true" loading="lazy">
+            <span class="step-row__num">04</span>
+            <div class="step-row__body">
+              <h3 class="step-row__title">Вибір і бронювання</h3>
+              <p class="step-row__text">Допоможу обрати цуценя за характером. Бронювання — за договором. <span class="todo">умови броні</span></p>
+              <ul class="step-row__tags"><li>Підбір за характером</li><li>Договір</li></ul>
+            </div>
           </li>
-          <li class="step" data-reveal>
-            <h3 class="step__title">Підготовка і переїзд</h3>
-            <p class="step__text">Дам список покупок і поради. Цуценя їде до вас із документами — по Україні і за кордон.</p>
-            <p class="todo" style="margin-top: 0.6rem;">уточнити: у якому віці переїжджають</p>
+          <li class="step-row" tabindex="0">
+            <img class="step-row__img" src="assets/images/life-home.webp" alt="" aria-hidden="true" loading="lazy">
+            <span class="step-row__num">05</span>
+            <div class="step-row__body">
+              <h3 class="step-row__title">Підготовка і переїзд</h3>
+              <p class="step-row__text">Дам список покупок і поради. Цуценя їде до вас із документами. <span class="todo">вік переїзду</span></p>
+              <ul class="step-row__tags"><li>Документи FCI · UKU</li><li>Щеплення</li><li>Україна і закордон</li></ul>
+            </div>
           </li>
-          <li class="step" data-reveal>
-            <h3 class="step__title">Підтримка</h3>
-            <p class="step__text">Я на зв'язку все життя собаки: здоров'я, виховання, годування — питайте будь-коли.</p>
+          <li class="step-row" tabindex="0">
+            <img class="step-row__img" src="assets/images/life-child.webp" alt="" aria-hidden="true" loading="lazy">
+            <span class="step-row__num">06</span>
+            <div class="step-row__body">
+              <h3 class="step-row__title">Підтримка</h3>
+              <p class="step-row__text">Я на зв'язку все життя собаки — питайте будь-коли.</p>
+              <ul class="step-row__tags"><li>Годування</li><li>Виховання</li><li>Здоров'я</li></ul>
+            </div>
           </li>
         </ol>
         <div class="steps-cta" data-reveal>
@@ -687,6 +728,6 @@
   <!-- Плаваюча кнопка на телефоні -->
   <a class="btn btn--primary mobile-cta" href="contacts.html#anketa">Записатися в лист очікування</a>
 
-  <script src="js/main.js" defer></script>
+  <script src="js/main.js?v=2026-11-26" defer></script>
 </body>
 </html>

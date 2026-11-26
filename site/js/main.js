@@ -486,4 +486,123 @@ var SITE = {
       roots.forEach(function (root) { mascotObserver.observe(root); });
     }
   }
+
+  /* ---------- 10. Самоперевірка «Чи підходить вам цвергпінчер» ---------- */
+  var FIT_RESULTS = {
+    /* ЗМІНИТИ: тексти, кнопки і пози пінчера для кожного результату */
+    start: { verdict: 'Відповідайте на 8 питань', dog: 'assets/mascots/tilt.webp' },
+    high: {
+      verdict: 'Схоже, це ваша порода!',
+      text: 'Ваш ритм життя чудово підходить енергійному і розумному цвергпінчеру. Наступний приплід — у 2027 році: займіть місце в листі очікування.',
+      cta: 'Записатися в лист очікування', href: 'contacts.html#anketa', dog: 'assets/mascots/jump.webp'
+    },
+    mid: {
+      verdict: 'Підійде — з невеликою підготовкою',
+      text: 'Цвергпінчер може стати вашим другом, якщо знайдете трохи більше часу на прогулянки й виховання. Почніть із чек-листа — там усе, що варто знати.',
+      cta: 'Отримати чек-лист', href: '#guide', dog: 'assets/mascots/sit-collar.webp'
+    },
+    low: {
+      verdict: 'Можливо, вам підійде інша порода',
+      text: 'Чесно: цвергпінчеру потрібно багато руху, уваги й виховання. Якщо зараз на це мало часу — краще придивитися до спокійнішої породи. А питання завжди можна поставити мені.',
+      cta: 'Детальніше про породу', href: 'breed.html#quiz', dog: 'assets/mascots/shy.webp'
+    }
+  };
+
+  document.querySelectorAll('[data-fit]').forEach(function (block) {
+    var rows = block.querySelectorAll('.fit-row');
+    var percentEl = block.querySelector('[data-fit-percent]');
+    var percentWrap = percentEl.parentElement;
+    var bar = block.querySelector('[data-fit-bar]');
+    var verdict = block.querySelector('[data-fit-verdict]');
+    var text = block.querySelector('[data-fit-text]');
+    var cta = block.querySelector('[data-fit-cta]');
+    var dog = block.querySelector('[data-fit-dog]');
+    var startText = text.textContent;
+    var currentLevel = 'start';
+
+    /* Підвантажуємо всі пози наперед, щойно людина почала відповідати */
+    var preloaded = false;
+    function preloadDogs() {
+      if (preloaded) return;
+      preloaded = true;
+      Object.keys(FIT_RESULTS).forEach(function (k) { new Image().src = FIT_RESULTS[k].dog; });
+    }
+
+    function setDog(src) {
+      if (!dog || dog.getAttribute('src') === src) return;
+      dog.classList.add('is-swapping');
+      setTimeout(function () {
+        var shown = false;
+        var show = function () { if (!shown) { shown = true; dog.classList.remove('is-swapping'); } };
+        dog.onload = show;
+        dog.loading = 'eager';
+        dog.setAttribute('src', src);
+        if (dog.complete) show();
+        setTimeout(show, 1200);  /* запасний варіант, якщо подія load не прийшла */
+      }, reduceMotion ? 0 : 250);
+    }
+
+    function update() {
+      var answered = 0;
+      var yes = 0;
+      rows.forEach(function (row) {
+        var picked = row.querySelector('[aria-pressed="true"]');
+        if (picked) { answered += 1; if (picked.dataset.v === '1') yes += 1; }
+      });
+      var percent = Math.round(yes / rows.length * 100);
+      percentEl.textContent = percent;
+      bar.style.width = percent + '%';
+
+      if (answered < rows.length) {
+        verdict.textContent = answered ? 'Відповіли ' + answered + ' з ' + rows.length : FIT_RESULTS.start.verdict;
+        percentWrap.className = 'fit-check__percent';
+        if (currentLevel !== 'start') {
+          currentLevel = 'start';
+          text.textContent = startText;
+          setDog(FIT_RESULTS.start.dog);
+        }
+        return;
+      }
+
+      var level = percent >= 75 ? 'high' : (percent >= 40 ? 'mid' : 'low');
+      var r = FIT_RESULTS[level];
+      percentWrap.className = 'fit-check__percent is-' + level;
+      verdict.textContent = r.verdict;
+      text.textContent = r.text;
+      cta.textContent = r.cta;
+      cta.setAttribute('href', r.href);
+      if (level !== currentLevel) { currentLevel = level; setDog(r.dog); }
+    }
+
+    rows.forEach(function (row) {
+      var buttons = row.querySelectorAll('button');
+      buttons.forEach(function (btn) {
+        btn.setAttribute('aria-pressed', 'false');
+        btn.addEventListener('click', function () {
+          preloadDogs();
+          buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+          update();
+        });
+      });
+    });
+  });
+
+  /* ---------- 11. Галерея собак і рядки кроків: активний елемент розгортається ---------- */
+  function setupActive(container, itemSelector) {
+    var items = container.querySelectorAll(itemSelector);
+    function activate(item) {
+      items.forEach(function (i) { i.classList.toggle('is-active', i === item); });
+    }
+    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    items.forEach(function (item) {
+      if (finePointer) item.addEventListener('mouseenter', function () { activate(item); });
+      item.addEventListener('click', function () { activate(item); });
+      item.addEventListener('focusin', function () { activate(item); });
+      item.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { if (e.target === item) { e.preventDefault(); activate(item); } }
+      });
+    });
+  }
+  document.querySelectorAll('[data-panels]').forEach(function (c) { setupActive(c, '.dog-panel'); });
+  document.querySelectorAll('[data-rows]').forEach(function (c) { setupActive(c, '.step-row'); });
 })();

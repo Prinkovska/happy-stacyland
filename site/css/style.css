@@ -1599,3 +1599,283 @@ textarea.field__input { min-height: 110px; resize: vertical; }
   .lead .form__status { margin-right: 110px; }
   .anketa__submit .form__status { margin-right: 170px; }
 }
+
+/* =========================================================
+   26. Самоперевірка «Чи підходить вам цвергпінчер»
+   Ліворуч — відсоток, шкала, висновок і пінчер; праворуч — 8 тверджень «Так / Ще ні».
+   ========================================================= */
+.fit-check__title { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+.fit-check {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+.fit-check__score {
+  position: sticky;
+  top: calc(var(--header-h) + 1.5rem);
+  overflow: hidden;
+  min-height: 460px;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  padding-right: 42%;
+  border-radius: var(--radius-l);
+  background: var(--c-cream);
+}
+.fit-check__percent {
+  font-family: var(--font-heading);
+  font-size: clamp(4.5rem, 3rem + 6vw, 8.5rem);
+  font-weight: 800;
+  line-height: 0.9;
+  color: rgba(11, 45, 97, 0.14);
+  transition: color 0.4s;
+  white-space: nowrap;
+}
+.fit-check__percent.is-high { color: var(--c-green); }
+.fit-check__percent.is-mid { color: #E0A800; }
+.fit-check__percent.is-low { color: rgba(11, 45, 97, 0.45); }
+.fit-check__bar { height: 8px; margin: 1.2rem 0 1.3rem; border-radius: 8px; background: rgba(11, 45, 97, 0.1); overflow: hidden; }
+.fit-check__bar span { display: block; width: 0; height: 100%; border-radius: 8px; background: var(--c-green); transition: width 0.5s var(--ease-out); }
+.fit-check__verdict { margin-bottom: 0.6rem; font-size: 1.35rem; }
+.fit-check__text { margin-bottom: 1.4rem; font-weight: 600; opacity: 0.8; }
+.fit-check__cta { position: relative; z-index: 1; }
+/* Пінчер у картці — змінює позу залежно від результату */
+.fit-check__dog {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+  max-height: 88%;
+  object-fit: contain;
+  object-position: right bottom;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+}
+.fit-check__dog.is-swapping { opacity: 0; transform: translateY(12%) scale(0.92); }
+
+.fit-check__list { border-top: 1px solid rgba(11, 45, 97, 0.12); }
+.fit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-m);
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(11, 45, 97, 0.12);
+}
+.fit-row__q { font-weight: 700; line-height: 1.4; }
+.fit-row__toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 4px;
+  border: 1.5px solid rgba(11, 45, 97, 0.15);
+  border-radius: 14px;
+  background: var(--c-white);
+}
+.fit-row__toggle button {
+  min-width: 70px;
+  padding: 0.55rem 0.9rem;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(11, 45, 97, 0.6);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  transition: background 0.2s, color 0.2s;
+}
+.fit-row__toggle button:hover { color: var(--c-navy); }
+.fit-row__toggle button[aria-pressed="true"][data-v="1"] { background: var(--c-green); color: var(--c-navy); }
+.fit-row__toggle button[aria-pressed="true"][data-v="0"] { background: var(--c-navy); color: var(--c-white); }
+
+/* =========================================================
+   27. «Наші собаки» — галерея, що розгортається
+   ========================================================= */
+.dog-panels {
+  display: flex;
+  gap: 0.75rem;
+  height: clamp(420px, 40vw, 560px);
+}
+.dog-panel {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 78px;
+  overflow: hidden;
+  border-radius: var(--radius-l);
+  background: var(--c-navy);
+  color: var(--c-white);
+  cursor: pointer;
+  transition: flex-grow 0.7s var(--ease-out), box-shadow 0.4s;
+  outline-offset: 4px;
+}
+.dog-panel.is-active { flex-grow: 5; cursor: default; box-shadow: 0 0 0 2px var(--c-yellow); }
+.dog-panel__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.7) brightness(0.7);
+  transition: filter 0.6s, transform 0.9s var(--ease-out);
+}
+.dog-panel.is-active .dog-panel__img { filter: none; }
+.dog-panel:not(.is-active):hover .dog-panel__img { filter: saturate(0.9) brightness(0.85); }
+.dog-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(6, 27, 61, 0.92) 0%, rgba(6, 27, 61, 0.15) 55%, rgba(6, 27, 61, 0) 75%);
+  pointer-events: none;
+}
+/* Вертикальне ім'я на вузькій панелі */
+.dog-panel__label {
+  position: absolute;
+  bottom: 1.4rem;
+  left: 50%;
+  z-index: 1;
+  margin: 0;
+  font-size: 1.25rem;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: translateX(-50%) rotate(180deg);
+  transition: opacity 0.3s;
+}
+.dog-panel.is-active .dog-panel__label { opacity: 0; }
+.dog-panel__body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: clamp(1.2rem, 2.5vw, 2rem);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s 0s, transform 0.5s var(--ease-out);
+  pointer-events: none;
+}
+.dog-panel.is-active .dog-panel__body { opacity: 1; transform: none; transition-delay: 0.25s; pointer-events: auto; }
+.dog-panel__name { font-size: clamp(1.8rem, 1.3rem + 1.5vw, 2.6rem); margin: 0.4rem 0 0.3rem; }
+.dog-panel__meta { margin-bottom: 1rem; font-weight: 700; opacity: 0.92; }
+
+/* =========================================================
+   28. «6 кроків» — нумеровані рядки з фото
+   ========================================================= */
+.step-rows__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-m);
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+.step-rows__head .section-lead { margin: 0; }
+.step-rows__badge {
+  max-width: 300px;
+  font-family: var(--font-hand);
+  font-size: clamp(1.5rem, 1.2rem + 0.8vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--c-yellow);
+  transform: rotate(-3deg);
+}
+.step-rows { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+.step-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: center;
+  min-height: 118px;
+  padding: clamp(1.1rem, 2vw, 1.5rem) clamp(1.2rem, 2.5vw, 2rem);
+  overflow: hidden;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-l);
+  background: var(--c-navy-deep);
+  cursor: pointer;
+  transition: border-color 0.35s, background 0.35s;
+  outline-offset: 3px;
+}
+.step-row.is-active { border-color: var(--c-yellow); cursor: default; }
+/* Фото праворуч, що розчиняється в темряві */
+.step-row__img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.35;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 55%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 55%);
+  transition: opacity 0.5s, transform 1.2s var(--ease-out);
+}
+.step-row.is-active .step-row__img { opacity: 0.85; transform: scale(1.04); }
+.step-row__num {
+  position: relative;
+  font-family: var(--font-heading);
+  font-size: clamp(2.6rem, 2rem + 2vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--c-yellow);
+}
+.step-row__body { position: relative; max-width: 560px; }
+.step-row__title { margin-bottom: 0.3rem; font-size: 1.3rem; color: var(--c-white); }
+.step-row__text { font-size: 0.97rem; opacity: 0.85; }
+.step-row__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  max-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  opacity: 0;
+  transition: max-height 0.5s var(--ease-out), opacity 0.4s, margin 0.4s;
+}
+.step-row.is-active .step-row__tags { max-height: 6rem; margin-top: 0.8rem; opacity: 1; }
+.step-row__tags li {
+  padding: 0.35rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-pill);
+  background: rgba(6, 27, 61, 0.55);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* =========================================================
+   29. Адаптив нових карток
+   ========================================================= */
+@media (max-width: 960px) {
+  .fit-check { grid-template-columns: 1fr; }
+  .fit-check__score { position: relative; top: 0; min-height: 0; padding-right: 38%; }
+}
+@media (max-width: 760px) {
+  .dog-panels { flex-direction: column; height: auto; }
+  .dog-panel { flex: none; height: 86px; min-width: 0; transition: height 0.6s var(--ease-out), box-shadow 0.4s; }
+  .dog-panel.is-active { height: 440px; }
+  .dog-panel__label { writing-mode: horizontal-tb; transform: none; left: 1.4rem; bottom: 50%; translate: 0 50%; }
+  .step-row__img { width: 100%; opacity: 0.18; -webkit-mask-image: none; mask-image: none; }
+  .step-row.is-active .step-row__img { opacity: 0.3; }
+}
+@media (max-width: 560px) {
+  .fit-row { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .fit-check__score { padding-right: 1.5rem; padding-bottom: 9rem; }
+  .fit-check__dog { width: 34%; max-height: 8.5rem; }
+  .fit-check__percent { font-size: 4.5rem; }
+  .step-row { grid-template-columns: 1fr; gap: 0.4rem; }
+}
+/* Самоперевірка: пінчер і великий відсоток не перетинаються з текстом */
+.fit-check__percent { font-size: clamp(3.6rem, 2.2rem + 3.6vw, 6.2rem); }
+.fit-check__dog { width: 38%; }
+.step-row__body { text-shadow: 0 1px 12px rgba(6, 27, 61, 0.8); }
+@media (max-width: 960px) {
+  .fit-check__score { padding-right: 40%; }
+  .fit-check__dog { width: 34%; }
+}
+@media (max-width: 560px) {
+  .fit-check__score { padding-right: 1.5rem; }
+  .fit-check__dog { width: 34%; }
+}
+.fit-check__dog { height: auto; max-height: none; }
+/* Пінчер у самоперевірці: обмежуємо і ширину, і висоту — пропорції зберігаються для будь-якої пози */
+.fit-check__dog { width: auto; height: auto; max-width: 38%; max-height: 78%; }
+@media (max-width: 960px) { .fit-check__dog { max-width: 34%; } }
+@media (max-width: 560px) { .fit-check__dog { max-width: 34%; max-height: 8.5rem; } }
