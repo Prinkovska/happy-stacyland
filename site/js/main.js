@@ -605,4 +605,10 @@ var SITE = {
   }
   document.querySelectorAll('[data-panels]').forEach(function (c) { setupActive(c, '.dog-panel'); });
   document.querySelectorAll('[data-rows]').forEach(function (c) { setupActive(c, '.step-row'); });
+
+  /* ---------- 12. Бігучий рядок у Hero: друга копія списку для безперервної стрічки ---------- */
+  document.querySelectorAll('.hero-ticker__track').forEach(function (track) {
+    var lists = track.querySelectorAll('.hero-ticker__list');
+    if (lists.length === 2) lists[1].innerHTML = lists[0].innerHTML;
+  });
 })();
