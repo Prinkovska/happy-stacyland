@@ -1502,3 +1502,100 @@ textarea.field__input { min-height: 110px; resize: vertical; }
   .hero__actions { flex-wrap: wrap; }
   .btn--text-light { min-height: 44px; }
 }
+
+/* =========================================================
+   25. Пінчери-підглядайки (мультяшні собаки розплідника)
+   Розмітка: <img class="mascot mascot--… " data-from="bottom|top|right|corner|pop" …>
+   Поява — коли блок доходить до екрана (клас .is-in додає main.js).
+   ========================================================= */
+.mascot {
+  position: absolute;
+  z-index: 2;
+  width: var(--mw, 200px);
+  height: auto;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  opacity: 0;
+  transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.45s ease;
+  transition-delay: var(--md, 0s);
+  filter: drop-shadow(0 10px 14px rgba(6, 27, 61, 0.18));
+}
+/* Звідки «висувається» */
+.mascot[data-from="bottom"] { transform: translateY(105%); }
+.mascot[data-from="top"]    { transform: translateY(-105%); }
+.mascot[data-from="right"]  { transform: translateX(105%); }
+.mascot[data-from="left"]   { transform: translateX(-105%); }
+.mascot[data-from="corner"] { transform: translate(60%, -70%) rotate(10deg); }
+.mascot[data-from="pop"]    { transform: scale(0.4) rotate(-14deg); }
+.mascot.is-in { opacity: 1; transform: none; }
+/* При наведенні — пінчер грайливо ворушиться */
+.mascot.is-in:hover { animation: mascot-wiggle 0.7s ease-in-out; }
+@keyframes mascot-wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-6deg) scale(1.04); }
+  60% { transform: rotate(5deg); }
+}
+/* Блоки, з країв яких визирають собаки */
+.mascot-clip { overflow: hidden; }
+
+/* --- Розміщення по блоках --- */
+.mascot--fit     { --mw: clamp(130px, 13vw, 200px); top: clamp(2rem, 5vw, 4.5rem); right: 5%; }
+.mascot--puppies { --mw: clamp(120px, 12vw, 180px); top: -6px; left: 47%; }
+.mascot--trust   { --mw: clamp(160px, 15vw, 260px); top: 1.5rem; right: 5%; }
+.mascot--reviews { --mw: clamp(150px, 16vw, 240px); top: 0; right: 0; }
+.mascot--guide   { --mw: clamp(80px, 7vw, 100px); bottom: 0; right: 2%; }
+.mascot--faq     { --mw: clamp(150px, 13vw, 240px); bottom: 0; left: 0; }
+.mascot--smug    { --mw: clamp(80px, 7.5vw, 110px); bottom: 0; left: 3%; }
+.mascot--peek    { --mw: clamp(110px, 11vw, 170px); bottom: 8%; right: 0; }
+.mascot--anketa  { --mw: clamp(110px, 11vw, 150px); bottom: 0; right: 4%; }
+.mascot--404     { --mw: clamp(150px, 16vw, 240px); top: 0; right: 0; }
+.lead { position: relative; overflow: hidden; }
+.lead > div, .lead__mock { position: relative; z-index: 1; }
+.final .final__doodle--2 { display: none; }  /* місце праворуч зайняв пінчер */
+.anketa__submit { position: relative; min-height: 170px; }
+
+/* Пінчер у картці результату квізу */
+.quiz__mascot { float: right; width: clamp(90px, 18vw, 140px); height: auto; margin: -0.5rem 0 0.5rem 1rem; }
+
+/* Невеликі екрани: менше собак, щоб не заважали тексту */
+@media (max-width: 1100px) {
+  .mascot--fit, .mascot--trust { display: none; }
+  .mascot--faq { --mw: 150px; }
+}
+@media (max-width: 860px) {
+  .mascot--guide { display: none; }
+  .mascot--faq { display: none; }
+  .mascot--puppies { left: auto; right: 6%; }
+  .mascot--smug { left: 4%; }
+}
+@media (max-width: 560px) {
+  .mascot--reviews { --mw: 110px; }
+  .mascot--smug { --mw: 72px; left: 3%; }
+  .mascot--peek { --mw: 80px; bottom: 4%; }
+  .mascot--anketa { display: none; }
+  .anketa__submit { min-height: 0; }
+  .final { padding-bottom: 7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mascot { opacity: 1; transform: none; }
+}
+
+/* Уточнення розміщення пінчерів після перевірки накладань */
+@media (max-width: 1299px) { .mascot--faq { display: none; } }
+@media (max-width: 1100px) {
+  .final { padding-bottom: 10rem; }
+  .mascot--smug { --mw: 64px; left: 4%; }
+  .mascot--peek { --mw: 90px; bottom: 0; }
+}
+@media (max-width: 860px) {
+  .mascot--reviews { display: none; }
+  .mascot--puppies { --mw: 80px; top: -4px; right: 5%; left: auto; }
+}
+/* Кнопка форми чек-листа — звичайної ширини (праворуч стоїть пінчер) */
+.lead .form > .btn { justify-self: start; }
+/* Повідомлення форм не заходять під пінчера */
+@media (min-width: 861px) {
+  .lead .form__status { margin-right: 110px; }
+  .anketa__submit .form__status { margin-right: 170px; }
+}

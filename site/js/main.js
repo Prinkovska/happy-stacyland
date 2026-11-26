@@ -466,4 +466,24 @@ var SITE = {
 
     show(0);
   });
+
+  /* ---------- 9. Пінчери-підглядайки ---------- */
+  /* Стежимо за блоком-батьком: сама картинка схована за краєм, тож «невидима» для браузера */
+  var mascots = document.querySelectorAll('.mascot');
+  if (mascots.length) {
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      mascots.forEach(function (m) { m.classList.add('is-in'); });
+    } else {
+      var mascotObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.querySelectorAll(':scope > .mascot').forEach(function (m) { m.classList.add('is-in'); });
+          mascotObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.25 });
+      var roots = new Set();
+      mascots.forEach(function (m) { roots.add(m.parentElement); });
+      roots.forEach(function (root) { mascotObserver.observe(root); });
+    }
+  }
 })();
